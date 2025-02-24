@@ -34,18 +34,9 @@ python --version
 
 ### Clone the Repository
 
-```bash
+````bash
 git clone https://github.com/PSewmuthu/Contact_Book.git
 cd Contact_Book
-```
-
-### Install Dependencies
-
-If required, install dependencies using:
-
-```bash
-pip install -r requirements.txt
-```
 
 ## 🚀 Usage
 
@@ -53,13 +44,17 @@ Run the application using:
 
 ```bash
 python contact_book.py
-```
+````
 
 Follow the on-screen prompts to add, search, update, delete, or view contacts.
 
 ## 💾 Data Storage
 
 - **SQLite Database:** Contacts will be stored in `contacts.db`.
+
+## 🖼️ Screenshots
+
+![App Screenshot](Screenshots/Screenshot%202025-02-24%20220831.png)
 
 ## 🤝 Contributing
 
