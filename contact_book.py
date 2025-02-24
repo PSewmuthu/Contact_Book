@@ -166,3 +166,20 @@ class ContactBook:
                            ''')
 
         self.conn.commit()
+
+    def delete(self, id):
+        cursor = self.conn.cursor()
+
+        # Delete data in Person table
+        cursor.execute(f'''
+                       DELETE FROM Person
+                       WHERE id = {id};
+                       ''')
+        self.conn.commit()
+
+        # Delete data in Phone table
+        cursor.execute(f'''
+                       DELETE FROM Phone
+                       WHERE person_id = {id};
+                       ''')
+        self.conn.commit()
