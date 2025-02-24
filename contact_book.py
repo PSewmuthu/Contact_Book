@@ -80,7 +80,7 @@ class ContactBook:
             # Get all numbers from Phone table
             cursor.execute(f'''
                            SELECT * FROM Phone
-                           WHERE id = {person['id']};
+                           WHERE person_id = {person['id']};
                            ''')
             phones = cursor.fetchall()
             self.conn.commit()
@@ -89,3 +89,52 @@ class ContactBook:
                 phones, person['email'], person['address']]
 
         return contacts
+
+    def search(self, search_by, value):
+        cursor = self.conn.cursor()
+        contact = {}
+
+        if search_by == 'name':
+            # Select the record which match with the given name
+            cursor.execute(f'''
+                           SELECT * FROM Person
+                           WHERE name = {value};
+                           ''')
+            person = cursor.fetchone()
+
+            self.conn.commit()
+
+            if person == []:
+                return "Given Name is not in the contact list."
+
+            # Get all phone numbers belongs to the given name
+            cursor.execute(f'''
+                           SELECT * FROM Phone
+                           WHERE person_id = {person['id']};
+                           ''')
+            phones = cursor.fetchall()
+
+            contact[person['name']] = [
+                phones, person['email'], person['address']]
+        elif search_by == 'phone':
+            # Select the record which match with the given phone number
+            cursor.execute(f'''
+                           SELECT * FROM Phone
+                           WHERE number = {value};
+                           ''')
+            phone = cursor.fetchone()
+            self.conn.commit()
+
+            if phone == []:
+                return "Given Phone number is not in the contact list."
+
+            cursor.execute(f'''
+                           SELECT * FROM Person
+                           WHERE id = {phone['person_id']};
+                           ''')
+            person = cursor.fetchone()
+
+            contact[person['name']] = [
+                phone, person['email'], person['address']]
+
+        return contact
