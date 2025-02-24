@@ -207,3 +207,6 @@ class ContactBook:
                        WHERE person_id = {id};
                        ''')
         self.conn.commit()
+
+    def __del__(self):
+        self.conn.close()
