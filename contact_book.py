@@ -64,3 +64,28 @@ class ContactBook:
                            ''')
 
         self.conn.commit()
+
+    def view_all(self):
+        contacts = {}
+        cursor = self.conn.cursor()
+
+        # Get all values from Person table
+        cursor.execute('''
+                       SELECT * FROM Person;
+                       ''')
+        persons = cursor.fetchall()
+        self.conn.commit()
+
+        for person in persons:
+            # Get all numbers from Phone table
+            cursor.execute(f'''
+                           SELECT * FROM Phone
+                           WHERE id = {person['id']};
+                           ''')
+            phones = cursor.fetchall()
+            self.conn.commit()
+
+            contacts[person['name']] = [
+                phones, person['email'], person['address']]
+
+        return contacts
