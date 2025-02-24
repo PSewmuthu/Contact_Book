@@ -257,6 +257,7 @@ if __name__ == "__main__":
                         by = int(input("Enter your choice (1/2): "))
                         if by not in [1, 2]:
                             print("Entered an invalid choice!")
+                        else:
                             break
                     except:
                         print("Entered an invalid choice!")
