@@ -37,3 +37,30 @@ class ContactBook:
                        ''')
 
         self.conn.commit()
+
+    def new_contact(self, name, phone_numbers=[], email='', address=''):
+        cursor = self.conn.cursor()
+
+        # Add details to Person table
+        cursor.execute(f'''
+                       INSERT INTO Person(name, email, address)
+                       VALUES ('{name}', '{email}', '{address}');
+                       ''')
+        self.conn.commit()
+
+        # Get the id of the record
+        cursor.execute(f'''
+                       SELECT id FROM Person
+                       WHERE name = '{name}';
+                       ''')
+        self.conn.commit()
+        id = cursor.fetchone()
+
+        # Add phone numbers to the Phone table
+        for phone in phone_numbers:
+            cursor.execute(f'''
+                           INSERT INTO Phone(person_id, number)
+                           VALUES ('{id}', '{phone}');
+                           ''')
+
+        self.conn.commit()
