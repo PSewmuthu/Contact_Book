@@ -40,6 +40,30 @@ class ContactBook:
 
         self.conn.commit()
 
+    def show_options(self):
+        menu = ["Create Contact", "View Contacts",
+                "Search", "Update", "Delete", "Exit"]
+
+        print("\n", "Contact Book".center(20, "#"))
+        print("\nWhat do you want to do?")
+
+        for i, itm in enumerate(menu, 1):
+            print(f"{i}. {itm}")
+
+        choice = 0
+        while True:
+            try:
+                choice = int(input("Enter you choice (1 - 6): "))
+
+                if choice not in range(1, len(menu) + 1):
+                    print("\nInvalid value entered! Try again...")
+                else:
+                    break
+            except:
+                print("\nInvalid value entered! Try again...")
+
+        return menu[choice - 1]
+
     def new_contact(self, name, phone_numbers=[], email='', address=''):
         cursor = self.conn.cursor()
 
