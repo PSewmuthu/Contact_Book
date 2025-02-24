@@ -12,6 +12,8 @@ class ContactBook:
     def __init__(self):
         self.conn = sqlite3.connect('contacts.db')
 
+        self.db_init()
+
     def db_init(self):
         cursor = self.conn.cursor()
 
