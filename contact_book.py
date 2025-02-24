@@ -210,3 +210,145 @@ class ContactBook:
 
     def __del__(self):
         self.conn.close()
+
+
+if __name__ == "__main__":
+    contact_book = ContactBook()
+
+    while True:
+        option = contact_book.show_options()
+
+        match option:
+            case 'Create Contact':
+                print("\nEnter new contact details below")
+
+                name = input("Name: ")
+                phone = [num.strip() for num in input(
+                    "Phone Numbers (Separate with commas): ")]
+                email = input("Email: ")
+                address = input("Address: ")
+
+                contact_book.new_contact(name, phone, email, address)
+                print("\nNew Contact Created Successfully!")
+
+            case 'View Contacts':
+                contacts = contact_book.view_all()
+
+                if contacts == {}:
+                    print("\nNo Contacts to Display")
+                else:
+                    for contact in contacts.values():
+                        print(
+                            "############################################################")
+                        print(f"Name: {contact[0]}")
+                        print("Phone Numbers:")
+                        for phone in contact[1]:
+                            print(f"\t\t{phone}")
+                        print(f"Email: {contact[2]}")
+                        print(f"Address: {contact[3]}")
+                        print(
+                            "############################################################")
+
+            case 'Search':
+                print("\nSearch By:\n1. Name\n2. Phone Number\n")
+                by = 0
+                while True:
+                    try:
+                        by = int(input("Enter your choice (1/2): "))
+                        if by not in [1, 2]:
+                            print("Entered an invalid choice!")
+                            break
+                    except:
+                        print("Entered an invalid choice!")
+
+                val = input("Search for: ").strip()
+                contact = {}
+
+                if by == 1:
+                    contact = contact_book.search('name', val)
+                else:
+                    contact = contact_book.search('phone', val)
+
+                print(
+                    "\n############################################################")
+                print(f"Name: {contact.values()[0][0]}")
+                print("Phone Numbers:")
+                for phone in contact.values()[0][1]:
+                    print(f"\t\t{phone}")
+                print(f"Email: {contact.values()[0][2]}")
+                print(f"Address: {contact.values()[0][3]}")
+                print(
+                    "############################################################\n")
+
+            case 'Update':
+                contacts = contact_book.view_all()
+                if contacts == {}:
+                    print("\nNo Contacts to Display")
+                else:
+                    print(
+                        "\n############################################################")
+
+                    for id, contact in contacts.items():
+                        print(f"{id}. {contact[0]} - {', '.join(contact[1])}")
+
+                    print(
+                        "############################################################\n")
+
+                    indx = 0
+                    try:
+                        indx = int(
+                            input("Enter the contact id you want to update: "))
+                    except:
+                        print("\nEnter a number...")
+
+                    print(
+                        "\nEnter new contact details below. Leave empty for not changing values.")
+
+                    name = input("Name: ")
+                    phone = [num.strip() for num in input(
+                        "Phone Numbers (Separate with commas): ")]
+                    email = input("Email: ")
+                    address = input("Address: ")
+
+                    if name == '':
+                        name = contacts[indx][0]
+
+                    if phone == ['']:
+                        phone = contacts[indx][1]
+
+                    if email == '':
+                        email = contacts[indx][2]
+
+                    if address == '':
+                        address = contacts[indx][3]
+
+                    contact_book.update(indx, name, phone, email, address)
+                    print("\nContact Updated Successfully!")
+
+            case 'Delete':
+                contacts = contact_book.view_all()
+                if contacts == {}:
+                    print("\nNo Contacts to Display")
+                else:
+                    print(
+                        "\n############################################################")
+
+                    for id, contact in contacts.items():
+                        print(f"{id}. {contact[0]} - {', '.join(contact[1])}")
+
+                    print(
+                        "############################################################\n")
+
+                    indx = 0
+                    try:
+                        indx = int(
+                            input("Enter the contact id you want to delete: "))
+                    except:
+                        print("\nEnter a number...")
+
+                    contact_book.delete(indx)
+                    print("\nContact Deleted Successfully!")
+
+            case 'Exit':
+                print("\n\nExiting the program...")
+                break
