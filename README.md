@@ -61,6 +61,10 @@ Follow the on-screen prompts to add, search, update, delete, or view contacts.
 
 - **SQLite Database:** Contacts will be stored in `contacts.db`.
 
+## 🖼️ Screenshots
+
+![App Screenshot](Screenshots/Screenshot%202025-02-24%20220831.png)
+
 ## 🤝 Contributing
 
 If you would like to contribute, please submit a pull request or raise an issue in the repository.
