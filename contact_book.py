@@ -21,7 +21,7 @@ class ContactBook:
         cursor.execute('''
                        CREATE TABLE IF NOT EXISTS Person(
                            id INT AUTO_INCREMENT PRIMARY KEY,
-                           name VARCHAR(100) NOT NULL,
+                           name VARCHAR(100) NOT NULL UNIQUE,
                            email VARCHAR(100),
                            address VARCHAR(500)
                        );
