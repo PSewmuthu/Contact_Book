@@ -20,18 +20,20 @@ class ContactBook:
         # Person table for store personal details
         cursor.execute('''
                        CREATE TABLE IF NOT EXISTS Person(
-                           id INT AUTO_INCREMENT PRIMARY KEY,
+                           id INTEGER,
                            name VARCHAR(100) NOT NULL UNIQUE,
                            email VARCHAR(100),
-                           address VARCHAR(500)
+                           address VARCHAR(500),
+                           PRIMARY KEY('id' AUTOINCREMENT)
                        );
                        ''')
 
         # Phone table for store phone numbers
         cursor.execute('''
                        CREATE TABLE IF NOT EXISTS Phone(
-                           person_id INT PRIMARY KEY,
-                           number VARCHAR(13) PRIMARY KEY,
+                           person_id INT,
+                           number VARCHAR(13),
+                           PRIMARY KEY(person_id, number),
                            FOREIGN KEY (person_id) REFERENCES Person(id)
                        );
                        ''')
@@ -60,7 +62,7 @@ class ContactBook:
         for phone in phone_numbers:
             cursor.execute(f'''
                            INSERT INTO Phone(person_id, number)
-                           VALUES ('{id}', '{phone}');
+                           VALUES ('{id[0]}', '{phone}');
                            ''')
 
         self.conn.commit()
@@ -80,13 +82,11 @@ class ContactBook:
             # Get all numbers from Phone table
             cursor.execute(f'''
                            SELECT * FROM Phone
-                           WHERE person_id = {person['id']};
+                           WHERE person_id = '{person[0]}';
                            ''')
-            phones = cursor.fetchall()
-            self.conn.commit()
+            phones = [phone[1] for phone in cursor.fetchall()]
 
-            contacts[person['name']] = [
-                phones, person['email'], person['address']]
+            contacts[person[0]] = [person[1], phones, person[2], person[3]]
 
         return contacts
 
@@ -98,44 +98,44 @@ class ContactBook:
             # Select the record which match with the given name
             cursor.execute(f'''
                            SELECT * FROM Person
-                           WHERE name = {value};
+                           WHERE name = '{value}';
                            ''')
             person = cursor.fetchone()
 
             self.conn.commit()
 
-            if person == []:
+            if person is None:
                 return "Given Name is not in the contact list."
 
             # Get all phone numbers belongs to the given name
             cursor.execute(f'''
                            SELECT * FROM Phone
-                           WHERE person_id = {person['id']};
+                           WHERE person_id = '{person[0]}';
                            ''')
-            phones = cursor.fetchall()
+            phones = [phone[1] for phone in cursor.fetchall()]
 
-            contact[person['id']] = [person['name'],
-                                     phones, person['email'], person['address']]
+            contact[person[0]] = [person[1],
+                                  phones, person[2], person[3]]
         elif search_by == 'phone':
             # Select the record which match with the given phone number
             cursor.execute(f'''
                            SELECT * FROM Phone
-                           WHERE number = {value};
+                           WHERE number = '{value}';
                            ''')
             phone = cursor.fetchone()
             self.conn.commit()
 
-            if phone == []:
+            if phone is None:
                 return "Given Phone number is not in the contact list."
 
             cursor.execute(f'''
                            SELECT * FROM Person
-                           WHERE id = {phone['person_id']};
+                           WHERE id = '{phone[0]}';
                            ''')
             person = cursor.fetchone()
 
-            contact[person['id']] = [person['name'],
-                                     phone, person['email'], person['address']]
+            contact[person[0]] = [person[1],
+                                  [phone[1]], person[2], person[3]]
 
         return contact
 
@@ -145,15 +145,15 @@ class ContactBook:
         # Update Person table
         cursor.execute(f'''
                        UPDATE Person
-                       SET name = {name}, email = {email}, address = {address}
-                       WHERE id = {id};
+                       SET name = '{name}', email = '{email}', address = '{address}'
+                       WHERE id = '{id}';
                        ''')
         self.conn.commit()
 
         # Delete existing phone numbers
         cursor.execute(f'''
                        DELETE FROM Phone
-                       WHERE person_id = {id};
+                       WHERE person_id = '{id}';
                        ''')
 
         self.conn.commit()
