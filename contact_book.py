@@ -114,8 +114,8 @@ class ContactBook:
                            ''')
             phones = cursor.fetchall()
 
-            contact[person['name']] = [
-                phones, person['email'], person['address']]
+            contact[person['id']] = [person['name'],
+                                     phones, person['email'], person['address']]
         elif search_by == 'phone':
             # Select the record which match with the given phone number
             cursor.execute(f'''
@@ -134,7 +134,35 @@ class ContactBook:
                            ''')
             person = cursor.fetchone()
 
-            contact[person['name']] = [
-                phone, person['email'], person['address']]
+            contact[person['id']] = [person['name'],
+                                     phone, person['email'], person['address']]
 
         return contact
+
+    def update(self, id,  name, phone_numbers=[], email='', address=''):
+        cursor = self.conn.cursor()
+
+        # Update Person table
+        cursor.execute(f'''
+                       UPDATE Person
+                       SET name = {name}, email = {email}, address = {address}
+                       WHERE id = {id};
+                       ''')
+        self.conn.commit()
+
+        # Delete existing phone numbers
+        cursor.execute(f'''
+                       DELETE FROM Phone
+                       WHERE person_id = {id};
+                       ''')
+
+        self.conn.commit()
+
+        # Add updated phone numbers
+        for phone in phone_numbers:
+            cursor.execute(f'''
+                           INSERT INTO Phone(person_id, number)
+                           VALUES ('{id}', '{phone}');
+                           ''')
+
+        self.conn.commit()
