@@ -44,7 +44,7 @@ class ContactBook:
         menu = ["Create Contact", "View Contacts",
                 "Search", "Update", "Delete", "Exit"]
 
-        print("\n", "Contact Book".center(20, "#"))
+        print("\n", "Contact Book".center(60, "#"))
         print("\nWhat do you want to do?")
 
         for i, itm in enumerate(menu, 1):
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
                 name = input("Name: ")
                 phone = [num.strip() for num in input(
-                    "Phone Numbers (Separate with commas): ")]
+                    "Phone Numbers (Separate with commas): ").split(',')]
                 email = input("Email: ")
                 address = input("Address: ")
 
@@ -256,11 +256,11 @@ if __name__ == "__main__":
                     try:
                         by = int(input("Enter your choice (1/2): "))
                         if by not in [1, 2]:
-                            print("Entered an invalid choice!")
+                            print("\nEntered an invalid choice!\n")
                         else:
                             break
                     except:
-                        print("Entered an invalid choice!")
+                        print("\nEntered an invalid choice!\n")
 
                 val = input("Search for: ").strip()
                 contact = {}
@@ -270,14 +270,18 @@ if __name__ == "__main__":
                 else:
                     contact = contact_book.search('phone', val)
 
+                if 'not in the contact list.' in contact:
+                    print("\n", contact)
+                    continue
+
                 print(
                     "\n############################################################")
-                print(f"Name: {contact.values()[0][0]}")
+                print(f"Name: {list(contact.values())[0][0]}")
                 print("Phone Numbers:")
-                for phone in contact.values()[0][1]:
+                for phone in list(contact.values())[0][1]:
                     print(f"\t\t{phone}")
-                print(f"Email: {contact.values()[0][2]}")
-                print(f"Address: {contact.values()[0][3]}")
+                print(f"Email: {list(contact.values())[0][2]}")
+                print(f"Address: {list(contact.values())[0][3]}")
                 print(
                     "############################################################\n")
 
@@ -307,7 +311,7 @@ if __name__ == "__main__":
 
                     name = input("Name: ")
                     phone = [num.strip() for num in input(
-                        "Phone Numbers (Separate with commas): ")]
+                        "Phone Numbers (Separate with commas): ").split(',')]
                     email = input("Email: ")
                     address = input("Address: ")
 
@@ -351,5 +355,5 @@ if __name__ == "__main__":
                     print("\nContact Deleted Successfully!")
 
             case 'Exit':
-                print("\n\nExiting the program...")
+                print("\n\nExiting the program...\n\n")
                 break
